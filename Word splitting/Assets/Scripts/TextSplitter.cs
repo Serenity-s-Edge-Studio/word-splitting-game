@@ -8,28 +8,53 @@ public class TextSplitter : MonoBehaviour
     [SerializeField]
     private Transform spawnerRoot;
     [SerializeField]
-    private TextMeshPro textObj;
+    private Transform spawnPos;
     [SerializeField]
     private TextMeshPro characterPrefab;
     [SerializeField]
+    private TextMeshPro sentencePrefab;
+    [SerializeField]
     [Range(1, 20)]
     private float rotationSpeed;
+
+    private TextMeshPro textObj;
+
+    private Controls.PlayerActions input;
     // Start is called before the first frame update
     void Start()
     {
-        Invoke("split", 1);
+        input = new Controls().Player;
+        input.Enable();
+        input.Shoot.performed += Shoot_performed;
+        //Invoke("split", 1);
+    }
+
+    private void Shoot_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
+    {
+        if (textObj != null)
+        {
+            split();
+        }
+        else
+        {
+            textObj = Instantiate(sentencePrefab, spawnPos.position + new Vector3(0, -1), Quaternion.identity);
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        float angle = Mathf.Sin(Time.time * 10) * 45; //tweak this to change frequency
+        float angle = Mathf.Sin(Time.time * rotationSpeed) * 45; //tweak this to change frequency
 
         spawnerRoot.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+        if (textObj != null)
+        {
+            textObj.transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+            //textObj.transform.position = Vector3
+        }
     }
     private void split()
     {
-        //_ = textObj.textInfo.characterInfo;
         textObj.enableAutoSizing = false;
         for (int i = 0; i < textObj.textInfo.characterInfo.Length; i++)
         {
