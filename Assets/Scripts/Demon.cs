@@ -6,8 +6,9 @@ public class Demon : MonoBehaviour
 {
     [SerializeField]
     private int health = 10;
-    public Vector2Int Speed;
+    public Vector3 TargetPos;
     public Vector3 SpawnPostion;
+    public DemonManager.DemonState state = DemonManager.DemonState.TargetRandomPatrol;
     private void Awake()
     {
         SpawnPostion = transform.position;
@@ -24,6 +25,18 @@ public class Demon : MonoBehaviour
     }
     private void OnDestroy()
     {
-        DemonManager.instance.remove(this);
+        DemonManager.instance.Remove(this);
+        ScoreManager.instance.DemonDispelled();
     }
+
+    // OnTriggerEnter2D is called when the Collider2D other enters the trigger (2D physics only)
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Person"))
+        {
+            collision.gameObject.GetComponent<Person>().influenceLevel--;
+            state = DemonManager.DemonState.ReturningFromTarget;
+        }
+    }
+
 }

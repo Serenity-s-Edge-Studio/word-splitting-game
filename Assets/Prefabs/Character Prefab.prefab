@@ -233,5 +233,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   decayTime: 10
   remainingDecayTime: 0
-  penetration: 0
-  damge: 20
+  penetration: 3
+  damage: 5

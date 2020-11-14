@@ -11,7 +11,7 @@ public class CharacterProjectile : MonoBehaviour, IDecayable
     [SerializeField]
     private int penetration = 1;
     [SerializeField]
-    private int damge = 20;
+    private int damage = 20;
 
     // Awake is called when the script instance is being loaded
     private void Awake()
@@ -31,11 +31,18 @@ public class CharacterProjectile : MonoBehaviour, IDecayable
         {
             Debug.Log("Hit demon");
             Demon hitDemon = collision.collider.gameObject.GetComponent<Demon>();
-            if (hitDemon.Damage(damge)) 
+            if (hitDemon.Damage(damage)) 
             {
                 penetration--;
                 if (penetration < 0) Destroy(gameObject);
             }
+        }else if (collision.collider.CompareTag("Person"))
+        {
+            Debug.Log("Hit person");
+            Person person = collision.collider.gameObject.GetComponent<Person>();
+            person.influenceLevel += damage / 10f;
+            penetration--;
+            if (penetration < 0) Destroy(gameObject);
         }
     }
     #region interface members
